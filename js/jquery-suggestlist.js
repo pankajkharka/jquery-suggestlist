@@ -21,7 +21,6 @@
 				keydown: $.proxy( this.keydown, this ),
 				keyup: $.proxy( this.updateLi, this )
 			} );
-			this.updateLi();
 		}
 	}
 
@@ -65,10 +64,12 @@
 				this.selectNext();
 				break;
 			case 13: // Enter
-				if ( this.picker.is( ':visible' ) ) {
-					this.updateVal();
-					event.preventDefault();
-				}
+				this.updateVal();
+				event.preventDefault();
+				break;
+			case event.keyCode: 
+				this.updateVal();
+				event.preventDefault();
 				break;
 			}
 		},
@@ -132,11 +133,9 @@
 		},
 
 		updateLi: function( event ) {
-			if ( event ) {
-				var keyVal = String.fromCharCode( event.keyCode ).toLowerCase();
-				if ( event.ctrlKey || ! /^[0-9a-z ]$/.test( keyVal ) ) {
-					return;
-				}
+			var keyVal = String.fromCharCode( event.keyCode ).toLowerCase();
+			if ( event.ctrlKey || ! /^[0-9a-z ]$/.test( keyVal ) ) {
+				return;
 			}
 
 			var val = $.trim( this.element.val() ).replace(/\s+/, ' '),
@@ -154,9 +153,7 @@
 					$( elem ).addClass( 'suggestlist-selected' );
 				}
 			} );
-			if ( event ) {
-				this.show();
-			}
+			this.show();
 		}
 
 	};
@@ -166,7 +163,7 @@
 			var $list = $( '<ul/>' ), i;
 			$list.addClass( 'suggestlist' )
 				.css( {
-					zIndex: getClosestZIndex( this.element )
+					zIndex: getClosestZIndex( this.element ),
 				} );
 
 			for( i = 0; i < options.list.length; i++ ) {
